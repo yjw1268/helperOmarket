@@ -1,4 +1,6 @@
 var app=getApp();
+import {String} from '../../utils/util.js'
+
 Page({
   data: {
     noMsg:false,
@@ -26,7 +28,23 @@ Page({
       url: '/pages/user/user?openid='+e.currentTarget.id
     })
   },
+ /* readMsg(e){
+    console.log(res)
+    wx.request({
+      url: 'https://www.bupt404.cn/readmsg.php',
+      method:"GET",
+      data:{
+        openid:wx.getStorageSync("openid"),
+        task_id:e.currentTarget.dataset.task_id
+      },
+      success:(res)=>{
+        console.log(res)
+      }
+
+    })
+  },*/
   accept(e) {
+    console.log(e)
       wx.request({
         url: 'https://www.bupt404.cn/accept.php',
         method: "GET",
@@ -59,6 +77,18 @@ Page({
     
   },
   goDetail(e) {
+    wx.request({
+      url: 'https://www.bupt404.cn/readmsg.php',
+      method: "GET",
+      data: {
+        openid: wx.getStorageSync("openid"),
+        task_id: e.currentTarget.id
+      },
+      success: (res) => {
+        console.log(res)
+      }
+
+    })
     wx.navigateTo({
       url: '/pages/detail/detail?task_id=' + e.currentTarget.id,
     })
@@ -70,8 +100,12 @@ Page({
         method:"GET",
         data:{openid:wx.getStorageSync('openid')},
         success:(res)=>{
-          console.log(res)
-          if (res.data.status == '20001') {
+          var xx = res.data;
+          console.log( String.isBlank(xx[1]))
+          console.log()
+
+          
+          if (String.isBlank(xx[0]) && String.isBlank(xx[1]) && String.isBlank(xx[2])) {
             this.setData({ noMsg: true })
           }
           this.setData({
